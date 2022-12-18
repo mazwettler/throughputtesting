@@ -10,6 +10,7 @@ import re
 runs = 5
 time_between_runs = 360
 server_ip = "10.0.1.10"
+output_dir = "/opt/output/"
 base_ports = {
  "iperf": 5001,
  "iperf3": 5201
@@ -22,7 +23,7 @@ regex = {
 
 def parseOutput(binary, filename):
     r = ""
-    with open(filename, 'r') as f:
+    with open(output_dir + filename, 'r') as f:
         line=""
         if binary == "iperf3":
             line = f.readlines()[-3]
@@ -55,7 +56,7 @@ def craftCommand(binary, settings, index):
     command = binary + " " + settings["flags"]
 
     # generate Output file name
-    base_filename = "/opt/output/" + str(index) + "_" + binary
+    base_filename = output_dir + str(index) + "_" + binary
 
     # handle server IP
     if binary == "iperf3" or binary == "iperf":
@@ -95,7 +96,7 @@ for i,test in enumerate(data):
     c = craftCommand(test["binary"], test["binary_settings"], i)
     data[i]["command"] = c
     data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
-    files = os.listdir("/opt/output")
+    files = os.listdir(output_dir)
     for file in files:
         if file.startswith(str(i)+"_"):
             speed = parseOutput(test["binary"] , file)
@@ -103,7 +104,7 @@ for i,test in enumerate(data):
 
 print(result)
 
-make_tarfile("output.tar", "/opt/output")
+make_tarfile("output.tar", output_dir)
 # Parse Output
 #with open("output.txt", "a+") as f:
 #    for test in data:
