@@ -65,14 +65,14 @@ for i,test in enumerate(data):
 print(data)
 result = ""
 # Parse Output
-with open("my_file.txt", "a+") as f:
+with open("output.txt", "a+") as f:
     for test in data:
         f.write("\n########################\n")
         f.write("Starting: " + test["command"])
         f.write("\n########################\n")
         f.write(test["output"])
-        if(test["binary"] == "iperf3"):
-            break
+        #if(test["binary"] == "iperf3"):
+        #    break
 
 
 #telegram_send.send(conf="./conf",messages=[result])
