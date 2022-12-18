@@ -31,7 +31,7 @@ def parseOutput(binary, filename):
         elif binary == "iperf":
             line = f.readlines()[-1]
         # Get fields
-        result = re.search(regex[binary],filename)
+        result = re.search(regex[binary],line)
         # convert speed to Mbps/sec
         try:
             speed = float(result.groups(2))
