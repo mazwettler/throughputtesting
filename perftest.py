@@ -34,8 +34,12 @@ def parseOutput(binary, filename):
         result = re.search(regex[binary],filename)
         # convert speed to Mbps/sec
         speed = float(result.groups(2))
-        if result.groups(2).contains("Gbps"):
-            speed = speed * 1000
+        try:
+            if result.groups(2).contains("Gbps"):
+                speed = speed * 1000
+        except AttributeError:
+            speed=1234567890.0
+
     return speed
 
 def make_tarfile(output_filename, source_dir):
