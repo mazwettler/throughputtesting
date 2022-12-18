@@ -23,6 +23,7 @@ regex = {
 
 def parseOutput(binary, filename):
     r = ""
+    speed = ""
     with open(output_dir + filename, 'r') as f:
         line=""
         if binary == "iperf3":
