@@ -48,12 +48,7 @@ def parseOutput(binary, filename):
         except AttributeError:
             print("\tERROR on parsing in file: " + filename + " on line: " + line)
             traceback.print_exc()
-
     return speed
-
-def make_tarfile(output_filename, source_dir):
-    with tarfile.open(output_filename, "w:gz") as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
 
 def ping():
     online = os.system("ping -w 10 -c 1 " + server_ip)
@@ -106,18 +101,21 @@ with open('/opt/script/tests.json') as f:
 result = "fw_size,test,binary,throughput"
 
 for i,test in enumerate(data):
-    time.sleep(5)
-    c = craftCommand(test["binary"], test["binary_settings"], i)
-    data[i]["command"] = c
-    print("\n# Running test: " + c)
-    data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
-    time.sleep(2)
-    files = os.listdir(output_dir)
-    speed = 0.0
-    for file in files:
-        if file.startswith(str(i)+"_"):
-            speed = speed + parseOutput(test["binary"] , file)
+    try:
+        time.sleep(5)
+        c = craftCommand(test["binary"], test["binary_settings"], i)
+        data[i]["command"] = c
+        print("\n# Running test: " + c)
+        data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
+        time.sleep(2)
+        files = os.listdir(output_dir)
+        speed = 0.0
+        for file in files:
+            if file.startswith(str(i)+"_"):
+                speed = speed + parseOutput(test["binary"] , file)
 
-    result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
+        result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
+    except:
+        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: <br> " + json.dumps(test) +  "Details: <br> ```" + traceback.format_exc() + "```"],parse_mode="markdown")
 
 telegram_send.send(conf="/opt/script/conf",messages=["```" + result + "```"],parse_mode="markdown")
