@@ -3,6 +3,7 @@ import subprocess
 import telegram_send
 import time
 import os
+import tarfile
 
 # Settings
 runs = 5
@@ -41,7 +42,7 @@ def craftCommand(binary, settings, index):
             if binary == "iperf3" or binary == "iperf":
                 port = base_ports[binary] + i
                 filename = base_filename + "-" + str(port)
-                command = command + " & " + base_command + " -p " + str(port) + " > " + base_filename + ".log"
+                command = command + " & " + base_command + " -p " + str(port) + " > " + filename + ".log"
     else:
         command = command
     return command
