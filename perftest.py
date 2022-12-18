@@ -28,7 +28,7 @@ def craftCommand(binary, settings, index):
     command = binary + " " + settings["flags"]
 
     # generate Output file name
-    base_filename = "output_" + str(index) + "_" + binary
+    base_filename = "/opt/output/" + str(index) + "_" + binary
 
     # handle server IP
     if binary == "iperf3" or binary == "iperf":
