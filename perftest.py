@@ -40,7 +40,7 @@ def craftCommand(binary, settings, index):
         for i in range(1, settings["threads"]):
             if binary == "iperf3" or binary == "iperf":
                 port = base_ports[binary] + i
-                filename = base_filename + "-" + port
+                filename = base_filename + "-" + str(port)
                 command = command + " & " + base_command + " -p " + str(port) + " > " + base_filename + ".log"
     else:
         command = command
