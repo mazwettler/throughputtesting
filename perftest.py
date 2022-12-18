@@ -1,16 +1,27 @@
 import json
 import subprocess
 import telegram_send
+import time
+import os
 
 # Settings
 runs = 5
 time_between_runs = 360
-server_ip = "speedtest.shinternet.ch"
+server_ip = "10.0.1.10"
 base_ports = {
  "iperf": 5001,
  "iperf3": 5201
-}
+ }
 
+def ping():
+    online = os.system("ping -w 10 -c 1 " + server_ip)
+    if(online == 0):
+         print("Avilabe with ",online)
+         return True
+    else:
+         print("Offline with ",online)
+         return False
+    
 
 def craftCommand(binary, settings):
     command = binary + " " + settings["flags"]
@@ -34,6 +45,13 @@ def craftCommand(binary, settings):
 #def ParseOutput:
     ## MAIN
 
+while True:
+    time.sleep(1)
+    if( ping()):
+        telegram_send.send(conf="./conf",messages=["iPerf server is reachable, starting benchmarks."])
+        break
+    time.sleep(1)
+
 data = ""
 
 with open('tests.json') as f:
@@ -53,6 +71,8 @@ with open("my_file.txt", "a+") as f:
         f.write("Starting: " + test["command"])
         f.write("\n########################\n")
         f.write(test["output"])
+        if(test["binary"] == "iperf3"):
+            break
 
 
 #telegram_send.send(conf="./conf",messages=[result])

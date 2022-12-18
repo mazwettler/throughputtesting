@@ -10,6 +10,14 @@
     {
         "binary": "iperf3",
         "binary_settings": {
+            "flags": "-b 0 -t 15 -O 5 -P 10",
+            "threads": 1
+        },
+        "name": "TCP Single Thread (Multi Stream)"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
             "flags": "-t 15",
             "threads": 3
         },
