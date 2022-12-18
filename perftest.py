@@ -95,7 +95,7 @@ while True:
 
 data = ""
 
-with open('"/opt/script/tests.json') as f:
+with open('/opt/script/tests.json') as f:
    data = json.load(f)
 
 result = "fw_size,test,binary,throughput"
