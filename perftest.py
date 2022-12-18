@@ -64,7 +64,7 @@ with open('tests.json') as f:
 for i,test in enumerate(data):
     c = craftCommand(test["binary"], test["binary_settings"], i)
     data[i]["command"] = c
-    #data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8") 
+    data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8") 
 
 result = ""
 # Parse Output
