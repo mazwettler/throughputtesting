@@ -32,10 +32,12 @@ def parseOutput(binary, filename):
             line = f.readlines()[-1]
         # Get fields
         result = re.search(regex[binary],line)
+
         # convert speed to Mbps/sec
         try:
             speed = float(result.group(2))
-            if result.groups(2).contains("Gbps"):
+            print(str(speed))
+            if result.group(2).contains("Gbps"):
                 speed = speed * 1000
         except AttributeError:
             speed=line
