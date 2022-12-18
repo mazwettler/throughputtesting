@@ -89,13 +89,13 @@ def craftCommand(binary, settings, index):
 while True:
     time.sleep(1)
     if( ping()):
-        telegram_send.send(conf="./conf",messages=["iPerf server is reachable, starting benchmarks."])
+        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks."])
         break
     time.sleep(1)
 
 data = ""
 
-with open('tests.json') as f:
+with open('"/opt/script/tests.json') as f:
    data = json.load(f)
 
 result = "fw_size,test,binary,throughput"
@@ -114,4 +114,4 @@ for i,test in enumerate(data):
 
     result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
 
-telegram_send.send(conf="./conf",messages=["```" + result + "```"])
+telegram_send.send(conf="/opt/script/conf",messages=["```" + result + "```"])
