@@ -4,6 +4,7 @@ import telegram_send
 import time
 import os
 import tarfile
+import re
 
 # Settings
 runs = 5
@@ -13,6 +14,32 @@ base_ports = {
  "iperf": 5001,
  "iperf3": 5201
  }
+
+regex = {
+ "iperf": r"^\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*$",
+ "iperf3": r"^\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*$"
+}
+
+def parseOutput(binary, filename):
+    r = ""
+    with open(filename, 'r') as f:
+        line=""
+        if binary == "iperf3":
+            line = f.readlines()[-3]
+        
+        elif binary == "iperf":
+            line = f.readlines()[-1]
+        # Get fields
+        result = re.search(regex[binary],filename)
+        # convert speed to Mbps/sec
+        speed = float(result.groups(2))
+        if result.groups(2).contains("Gbps"):
+            speed = speed * 1000
+    return speed
+
+def make_tarfile(output_filename, source_dir):
+    with tarfile.open(output_filename, "w:gz") as tar:
+        tar.add(source_dir, arcname=os.path.basename(source_dir))
 
 def ping():
     online = os.system("ping -w 10 -c 1 " + server_ip)
@@ -62,12 +89,21 @@ data = ""
 with open('tests.json') as f:
    data = json.load(f)
 
+result = "test,binary,throughput"
+
 for i,test in enumerate(data):
     c = craftCommand(test["binary"], test["binary_settings"], i)
     data[i]["command"] = c
-    data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8") 
+    data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
+    files = os.listdir("/opt/output")
+    for file in files:
+        if file.startswith(i+"_"):
+            speed = parseOutput(test["binary"] , file)
+            result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
 
-result = ""
+print(result)
+
+make_tarfile("output.tar", "/opt/output")
 # Parse Output
 #with open("output.txt", "a+") as f:
 #    for test in data:
