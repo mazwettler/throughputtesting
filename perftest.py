@@ -5,6 +5,7 @@ import time
 import os
 import tarfile
 import re
+import traceback
 
 # Settings
 runs = 5
@@ -42,6 +43,7 @@ def parseOutput(binary, filename):
                 speed = speed * 1000
         except AttributeError:
             print("ERROR on parsing in file: " + filename + " on line: " + line)
+            traceback.print_exc()
 
     return speed
 
