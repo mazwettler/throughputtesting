@@ -3,7 +3,7 @@
         "binary": "iperf3",
         "binary_settings": {
             "flags": "-b 0 -t 15 -O 5",
-            "threads": 3
+            "threads": 1
         },
         "name": "TCP Single Thread (Single Stream)"
     },
@@ -16,11 +16,35 @@
         "name": "TCP Single Thread (Multi Stream)"
     },
     {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-b 0 -t 15 -O 5 -P 10",
+            "threads": 3
+        },
+        "name": "TCP Multi Thread (Single Stream)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-b 0 -t 15 -O 5 -P 10",
+            "threads": 3
+        },
+        "name": "TCP Multi Thread (Multi Stream)"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-t 15",
+            "threads": 1
+        },
+        "name": "TCP Single Thread (Single Stream)"
+    },
+    {
         "binary": "iperf",
         "binary_settings": {
             "flags": "-t 15",
             "threads": 3
         },
-        "name": "TCP Single Thread (Single Stream)"
+        "name": "TCP Multi Thread (Single Stream)"
     }
 ]
