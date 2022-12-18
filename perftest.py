@@ -38,7 +38,7 @@ def parseOutput(binary, filename):
         # convert speed to Mbps/sec
         try:
             speed = float(result.group(2))
-            print("Speed: " + str(speed) + " " + result.group(3))
+            print("Parsed Speed: " + str(speed) + " " + result.group(3) + " from file " + filename)
             if "Gbps" in result.group(3):
                 speed = speed * 1000
         except AttributeError:
