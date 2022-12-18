@@ -99,7 +99,7 @@ data = ""
 with open('/opt/script/tests.json') as f:
    data = json.load(f)
 
-result = "fw_size,test,binary,throughput\n‚‚"
+result = "fw_size,test,binary,throughput,command\n"
 
 for i,test in enumerate(data):
     try:
@@ -115,8 +115,8 @@ for i,test in enumerate(data):
             if file.startswith(str(i)+"_"):
                 speed = speed + parseOutput(test["binary"] , file)
 
-        result = result + "\"{}\",{},{}\n".format(test["name"],test["binary"],speed)
+        result = result + ",\"{}\",{},{},\"{}\"\n".format(test["name"],test["binary"],speed,c)
     except:
-        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```" + json.dumps(test) +  "``` \n\n Details: \n ```" + traceback.format_exc() + "```"],parse_mode="markdown")
+        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```\n" + json.dumps(test) +  "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"],parse_mode="markdown")
 
-telegram_send.send(conf="/opt/script/conf",messages=["Results are in! \n ```" + result + "```"],parse_mode="markdown")
+telegram_send.send(conf="/opt/script/conf",messages=["Results are in! \n ```\n" + result + "```"],parse_mode="markdown")
