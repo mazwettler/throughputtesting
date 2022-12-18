@@ -3,7 +3,6 @@ import subprocess
 import telegram_send
 import time
 import os
-import tarfile
 import re
 import traceback
 
@@ -99,32 +98,20 @@ data = ""
 with open('tests.json') as f:
    data = json.load(f)
 
-result = "test,binary,throughput"
+result = "fw_size,test,binary,throughput"
 
 for i,test in enumerate(data):
     c = craftCommand(test["binary"], test["binary_settings"], i)
     data[i]["command"] = c
-    print("Running test: " + c)
+    print("\nRunning test: " + c)
     data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
     time.sleep(2)
     files = os.listdir(output_dir)
+    speed = 0.0
     for file in files:
         if file.startswith(str(i)+"_"):
-            speed = parseOutput(test["binary"] , file)
-            result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
+            speed = speed + parseOutput(test["binary"] , file)
 
-print(result)
+    result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
 
-make_tarfile("output.tar", output_dir)
-# Parse Output
-#with open("output.txt", "a+") as f:
-#    for test in data:
-#        f.write("\n#######################################\n")
-#        f.write("###### Starting: " + test["command"])
-#        f.write("\n#######################################\n")
-#        f.write(test["test.log"])
-        #if(test["binary"] == "iperf3"):
-            
-
-
-# telegram_send.send(conf="./conf",messages=[result])
+telegram_send.send(conf="./conf",messages=["```" + result + "```"])
