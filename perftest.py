@@ -38,7 +38,7 @@ def parseOutput(binary, filename):
         try:
             speed = float(result.group(2))
             print("Speed: " + str(speed))
-            if result.group(3).contains("Gbps"):
+            if "Gbps" in result.group(3):
                 speed = speed * 1000
         except AttributeError:
             print("ERROR on parsing line: " + line)
@@ -52,7 +52,7 @@ def make_tarfile(output_filename, source_dir):
 def ping():
     online = os.system("ping -w 10 -c 1 " + server_ip)
     if(online == 0):
-         print("Avilabe with ",online)
+         print("Availabe with ",online)
          return True
     else:
          print("Offline with ",online)
