@@ -38,11 +38,11 @@ def parseOutput(binary, filename):
         # convert speed to Mbps/sec
         try:
             speed = float(result.group(2))
-            print("Parsed Speed: " + str(speed) + " " + result.group(3) + " from file " + filename)
+            print("\tParsed Speed: " + str(speed) + " " + result.group(3) + " from file " + filename)
             if "Gbps" in result.group(3):
                 speed = speed * 1000
         except AttributeError:
-            print("ERROR on parsing in file: " + filename + " on line: " + line)
+            print("\tERROR on parsing in file: " + filename + " on line: " + line)
             traceback.print_exc()
 
     return speed
@@ -106,6 +106,7 @@ for i,test in enumerate(data):
     data[i]["command"] = c
     print("Running test: " + c)
     data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
+    time.sleep(2)
     files = os.listdir(output_dir)
     for file in files:
         if file.startswith(str(i)+"_"):
