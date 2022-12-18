@@ -6,6 +6,7 @@ import os
 import re
 import traceback
 import pandas as pd
+from html2image import Html2Image
 
 # Settings
 runs = 5
@@ -129,5 +130,8 @@ f.close()
 df = pd.read_csv(output_dir + "result.csv")
 
 html = df.to_html()
+hti = Html2Image()
+hti.screenshot(html_str=html, save_as= output_dir + 'result.png')
 
-telegram_send.send(conf="/opt/script/conf",messages=["Results are in! <br>" + html],parse_mode="html")
+with open(output_dir + 'result.png', "rb") as f:
+    telegram_send.send(conf="/opt/script/conf",images=[f])
