@@ -23,12 +23,15 @@ def ping():
          return False
     
 
-def craftCommand(binary, settings):
+def craftCommand(binary, settings, index):
     command = binary + " " + settings["flags"]
 
+    # generate Output file name
+
+    base_filename = "output_" + i
     # handle server IP
     if binary == "iperf3" or binary == "iperf":
-        command = command + " -c " + server_ip
+        command = command + " -c " + server_ip + " > " + base_filename + ".log"
     
     # handle multithreading
     base_command = command
@@ -37,7 +40,8 @@ def craftCommand(binary, settings):
         for i in range(1, settings["threads"]):
             if binary == "iperf3" or binary == "iperf":
                 port = base_ports[binary] + i
-                command = command + " & " + base_command + " -p " + str(port)
+                filename = base_filename + "-" + port
+                command = command + " & " + base_command + " -p " + str(port) + " > " + base_filename + ".log"
     else:
         command = command
     return command
@@ -58,21 +62,20 @@ with open('tests.json') as f:
    data = json.load(f)
 
 for i,test in enumerate(data):
-    c = craftCommand(test["binary"], test["binary_settings"])
+    c = craftCommand(test["binary"], test["binary_settings"], i)
     data[i]["command"] = c
     data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8") 
 
-print(data)
 result = ""
 # Parse Output
 with open("output.txt", "a+") as f:
     for test in data:
-        f.write("\n########################\n")
-        f.write("Starting: " + test["command"])
-        f.write("\n########################\n")
-        f.write(test["output"])
-        #if(test["binary"] == "iperf3"):
-        #    break
+        f.write("\n#######################################\n")
+        f.write("###### Starting: " + test["command"])
+        f.write("\n#######################################\n")
+        f.write(test["test.log"])
+        if(test["binary"] == "iperf3"):
+            
 
 
 #telegram_send.send(conf="./conf",messages=[result])
