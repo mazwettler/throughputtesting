@@ -97,7 +97,7 @@ for i,test in enumerate(data):
     data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
     files = os.listdir("/opt/output")
     for file in files:
-        if file.startswith(i+"_"):
+        if file.startswith(str(i)+"_"):
             speed = parseOutput(test["binary"] , file)
             result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
 
