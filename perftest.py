@@ -130,8 +130,8 @@ f.close()
 df = pd.read_csv(output_dir + "result.csv")
 
 html = df.to_html()
-hti = Html2Image()
-hti.screenshot(html_str=html, save_as= output_dir + 'result.png')
+hti = Html2Image(output_path=output_dir)
+hti.screenshot(html_str=html, save_as='result.png')
 
 with open(output_dir + 'result.png', "rb") as f:
     telegram_send.send(conf="/opt/script/conf",images=[f])
