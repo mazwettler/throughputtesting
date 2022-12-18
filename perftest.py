@@ -38,7 +38,7 @@ def parseOutput(binary, filename):
             if result.groups(2).contains("Gbps"):
                 speed = speed * 1000
         except AttributeError:
-            speed=1234567890.0
+            speed=line
 
     return speed
 
