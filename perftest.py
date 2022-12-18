@@ -41,7 +41,7 @@ def parseOutput(binary, filename):
             if "Gbps" in result.group(3):
                 speed = speed * 1000
         except AttributeError:
-            print("ERROR on parsing line: " + line)
+            print("ERROR on parsing in file: " + filename + " on line: " + line)
 
     return speed
 
