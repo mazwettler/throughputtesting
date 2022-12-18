@@ -32,6 +32,38 @@
         "name": "TCP Multi Thread (Multi Stream)"
     },
     {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 15 -O 5",
+            "threads": 1
+        },
+        "name": "UDP Single Thread (Single Stream)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 15 -O 5 -P 10",
+            "threads": 1
+        },
+        "name": "UDP Single Thread (Multi Stream)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 15 -O 5 -P 10",
+            "threads": 3
+        },
+        "name": "UDP Multi Thread (Single Stream)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 15 -O 5 -P 10",
+            "threads": 3
+        },
+        "name": "UDP Multi Thread (Multi Stream)"
+    },
+    {
         "binary": "iperf",
         "binary_settings": {
             "flags": "-t 15",
@@ -46,5 +78,21 @@
             "threads": 3
         },
         "name": "TCP Multi Thread (Single Stream)"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-u -t 15",
+            "threads": 1
+        },
+        "name": "UDP Single Thread (Single Stream)"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-u -t 15",
+            "threads": 3
+        },
+        "name": "UDP Multi Thread (Single Stream)"
     }
 ]

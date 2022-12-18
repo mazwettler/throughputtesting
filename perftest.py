@@ -114,4 +114,4 @@ for i,test in enumerate(data):
 
     result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
 
-telegram_send.send(conf="/opt/script/conf",messages=["```" + result + "```"])
+telegram_send.send(conf="/opt/script/conf",messages=["```" + result + "```"],parse_mode="markdown")
