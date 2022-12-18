@@ -33,8 +33,8 @@ def parseOutput(binary, filename):
         # Get fields
         result = re.search(regex[binary],filename)
         # convert speed to Mbps/sec
-        speed = float(result.groups(2))
         try:
+            speed = float(result.groups(2))
             if result.groups(2).contains("Gbps"):
                 speed = speed * 1000
         except AttributeError:
