@@ -5,6 +5,7 @@ import time
 import os
 import re
 import traceback
+import pandas as pd
 
 # Settings
 runs = 5
@@ -43,8 +44,10 @@ def parseOutput(binary, filename):
         try:
             speed = float(result.group(2))
             print("\tParsed Speed: " + str(speed) + " " + result.group(3) + " from file " + filename)
-            if "Gbps" in result.group(3):
+            if "Gbits" in result.group(3):
                 speed = speed * 1000
+            elif "Kbits" in result.group(3):
+                speed = speed / 1000
         except AttributeError:
             print("\tERROR on parsing in file: " + filename + " on line: " + line)
             traceback.print_exc()
@@ -119,4 +122,12 @@ for i,test in enumerate(data):
     except:
         telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```\n" + json.dumps(test) +  "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"],parse_mode="markdown")
 
-telegram_send.send(conf="/opt/script/conf",messages=["Results are in! \n ```\n" + result + "```"],parse_mode="markdown")
+f = open(output_dir + "result.csv", "a+")
+f.write(result)
+f.close()
+
+df = pd.read_csv(output_dir + "result.csv")
+
+html = df.to_html()
+
+telegram_send.send(conf="/opt/script/conf",messages=["Results are in! <br>" + html],parse_mode="html")
