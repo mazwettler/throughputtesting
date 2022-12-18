@@ -33,11 +33,11 @@ def craftCommand(binary, settings):
     # handle multithreading
     base_command = command
     if settings["threads"] > 1:
-        command = command + " -p " + str(base_ports[binary]) + " | grep receiver"
+        command = command + " -p " + str(base_ports[binary])
         for i in range(1, settings["threads"]):
             if binary == "iperf3" or binary == "iperf":
                 port = base_ports[binary] + i
-                command = command + " & " + base_command + " -p " + str(port) + " | grep receiver"
+                command = command + " & " + base_command + " -p " + str(port)
     else:
         command = command
     return command
