@@ -114,8 +114,8 @@ for i,test in enumerate(data):
             if file.startswith(str(i)+"_"):
                 speed = speed + parseOutput(test["binary"] , file)
 
-        result = result + "{},{},{}\n".format(test["name"],test["binary"],speed)
+        result = result + "\"{}\",{},{}\n".format(test["name"],test["binary"],speed)
     except:
-        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: <br> " + json.dumps(test) +  "Details: <br> ```" + traceback.format_exc() + "```"],parse_mode="markdown")
+        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```" + json.dumps(test) +  "``` \n\n Details: <br> ```" + traceback.format_exc() + "```"],parse_mode="markdown")
 
-telegram_send.send(conf="/opt/script/conf",messages=["```" + result + "```"],parse_mode="markdown")
+telegram_send.send(conf="/opt/script/conf",messages=["Results are in! \n ```" + result + "```"],parse_mode="markdown")
