@@ -21,6 +21,11 @@ regex = {
  "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*"
 }
 
+info=""
+
+#with open('/opt/script/info') as f:
+#   info = json.load(f)
+
 def parseOutput(binary, filename):
     r = ""
     speed = ""
@@ -101,9 +106,10 @@ with open('/opt/script/tests.json') as f:
 result = "fw_size,test,binary,throughput"
 
 for i,test in enumerate(data):
+    time.sleep(5)
     c = craftCommand(test["binary"], test["binary_settings"], i)
     data[i]["command"] = c
-    print("\nRunning test: " + c)
+    print("\n# Running test: " + c)
     data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
     time.sleep(2)
     files = os.listdir(output_dir)
