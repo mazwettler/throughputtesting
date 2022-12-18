@@ -61,6 +61,7 @@ def ping():
     
 
 def craftCommand(binary, settings, index):
+    # generate command
     command = binary + " " + settings["flags"]
 
     # generate Output file name
@@ -72,19 +73,19 @@ def craftCommand(binary, settings, index):
     
     # handle multithreading
     base_command = command
-    if settings["threads"] > 1:
-        command = command + " -p " + str(base_ports[binary])
-        for i in range(1, settings["threads"]):
-            if binary == "iperf3" or binary == "iperf":
-                port = base_ports[binary] + i
-                filename = base_filename + "-" + str(port)
-                command = command + " & " + base_command + " -p " + str(port) + " > " + filename + ".log"
-    else:
-        command = command
+    try:
+        if settings["threads"] > 1:
+            command = command + " -p " + str(base_ports[binary])
+            for i in range(1, settings["threads"]):
+                if binary == "iperf3":
+                    port = base_ports[binary] + i
+                    filename = base_filename + "-" + str(port)
+                    command = command + " & " + base_command + " -p " + str(port) + " > " + filename + ".log"
+    except KeyError:
+        return command
+
     return command
 
-#def ParseOutput:
-    ## MAIN
 
 while True:
     time.sleep(1)
@@ -98,7 +99,7 @@ data = ""
 with open('/opt/script/tests.json') as f:
    data = json.load(f)
 
-result = "fw_size,test,binary,throughput"
+result = "fw_size,test,binary,throughput\n‚‚"
 
 for i,test in enumerate(data):
     try:
@@ -116,6 +117,6 @@ for i,test in enumerate(data):
 
         result = result + "\"{}\",{},{}\n".format(test["name"],test["binary"],speed)
     except:
-        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```" + json.dumps(test) +  "``` \n\n Details: <br> ```" + traceback.format_exc() + "```"],parse_mode="markdown")
+        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```" + json.dumps(test) +  "``` \n\n Details: \n ```" + traceback.format_exc() + "```"],parse_mode="markdown")
 
 telegram_send.send(conf="/opt/script/conf",messages=["Results are in! \n ```" + result + "```"],parse_mode="markdown")
