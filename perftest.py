@@ -37,11 +37,11 @@ def parseOutput(binary, filename):
         # convert speed to Mbps/sec
         try:
             speed = float(result.group(2))
-            print(str(speed))
+            print("Speed: " + str(speed))
             if result.group(3).contains("Gbps"):
                 speed = speed * 1000
         except AttributeError:
-            print(line)
+            print("ERROR on parsing line: " + line)
 
     return speed
 
@@ -102,6 +102,7 @@ result = "test,binary,throughput"
 for i,test in enumerate(data):
     c = craftCommand(test["binary"], test["binary_settings"], i)
     data[i]["command"] = c
+    print("Running test: " + c)
     data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
     files = os.listdir(output_dir)
     for file in files:
