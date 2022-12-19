@@ -24,7 +24,7 @@ regex = {
  "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*"
 }
 
-def parseOutput(binary, filename):
+def parseOutput(binary, command, filename):
     r = ""
     speed = ""
     with open(output_dir + filename, 'r') as f:
