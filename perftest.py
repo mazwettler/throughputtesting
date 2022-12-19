@@ -85,14 +85,6 @@ def craftCommand(binary, settings, index):
 
     return command
 
-
-while True:
-    time.sleep(1)
-    if( ping()):
-        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks. (FW_SIZE: {}, FW_VENDOR: {})".format(info["fwvendor"],info["fwsize"])])
-        break
-    time.sleep(1)
-
 data = ""
 info = ""
 result = "fw_vendor,fw_size,test,binary,throughput,command\n"
@@ -102,6 +94,15 @@ with open('/opt/script/tests.json') as f:
 
 with open('/opt/script/info') as f:
    info = json.load(f)
+
+while True:
+    time.sleep(1)
+    if( ping()):
+        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks. (FW_SIZE: {}, FW_VENDOR: {})".format(info["vendor"],info["fwsize"])])
+        break
+    time.sleep(1)
+
+
    
 for i,test in enumerate(data):
     try:
