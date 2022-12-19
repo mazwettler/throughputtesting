@@ -129,8 +129,25 @@ f.close()
 
 df = pd.read_csv(output_dir + "result.csv")
 
-html = df.to_html()
-hti = Html2Image(output_path=output_dir)
+template = """"
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style>
+th {
+    background: #2d2d71;
+    color: white;
+    text-align: left;
+}
+</style>
+<body>
+%s
+</body>
+"""
+
+classes = 'table table-striped table-bordered table-hover table-sm'
+html= template % df.to_html(classes=classes)
+
+#html = df.to_html()
+hti = Html2Image(custom_flags=["--headless", "--no-sandbox"],output_path=output_dir,browser_executable="/usr/bin/google-chrome-stable")
 hti.screenshot(html_str=html, save_as='result.png')
 
 with open(output_dir + 'result.png', "rb") as f:
