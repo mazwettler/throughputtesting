@@ -88,14 +88,14 @@
     {
         "binary": "iperf",
         "binary_settings": {
-            "flags": "-u -t 10"
+            "flags": "-u -b 25G -t 10"
         },
         "name": "UDP Single Thread"
     },
     {
         "binary": "iperf",
         "binary_settings": {
-            "flags": "-u -t 10 -P 5"
+            "flags": "-u -b 25G -t 10 -P 5"
         },
         "name": "UDP Multi Thread"
     }
