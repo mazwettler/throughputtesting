@@ -23,11 +23,6 @@ regex = {
  "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*"
 }
 
-info=""
-
-#with open('/opt/script/info') as f:
-#   info = json.load(f)
-
 def parseOutput(binary, filename):
     r = ""
     speed = ""
@@ -94,17 +89,20 @@ def craftCommand(binary, settings, index):
 while True:
     time.sleep(1)
     if( ping()):
-        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks."])
+        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks. (FW_SIZE: {}, FW_VENDOR: {})".format(info["fwvendor"],info["fwsize"])])
         break
     time.sleep(1)
 
 data = ""
+info = ""
+result = "fw_vendor,fw_size,test,binary,throughput,command\n"
 
 with open('/opt/script/tests.json') as f:
    data = json.load(f)
 
-result = "fw_size,test,binary,throughput,command\n"
-
+with open('/opt/script/info') as f:
+   info = json.load(f)
+   
 for i,test in enumerate(data):
     try:
         time.sleep(5)
@@ -119,7 +117,7 @@ for i,test in enumerate(data):
             if file.startswith(str(i)+"_"):
                 speed = speed + parseOutput(test["binary"] , file)
 
-        result = result + ",\"{}\",{},{},\"{}\"\n".format(test["name"],test["binary"],speed,c)
+        result = result + "\"{}\",\"{}\",{},{},\"{}\"\n".format(info["fwvendor"],info["fwsize"],test["name"],test["binary"],speed,c)
     except:
         telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```\n" + json.dumps(test) +  "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"],parse_mode="markdown")
 

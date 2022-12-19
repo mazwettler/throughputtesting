@@ -84,5 +84,19 @@
             "flags": "-t 15 -P 5"
         },
         "name": "TCP Multi Thread"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-t 15"
+        },
+        "name": "UDP Single Thread"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-t 15 -P 5"
+        },
+        "name": "UDP Multi Thread"
     }
 ]
