@@ -20,6 +20,7 @@ base_ports = {
 
 regex = {
  "iperf": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
+ "iperf -u": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
  "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*"
 }
 
@@ -32,7 +33,11 @@ def parseOutput(binary, filename):
             line = f.readlines()[-3]
         
         elif binary == "iperf":
-            line = f.readlines()[-1]
+            if " -u " in command
+                line = f.readlines()[-2]
+                binary = "iperf -u"
+            else:
+                line = f.readlines()[-1]
         # Get fields
         result = re.search(regex[binary],line)
 
@@ -123,7 +128,7 @@ for i,test in enumerate(data):
         speed = 0.0
         for file in files:
             if file.startswith(str(i)+"_"):
-                speed = speed + parseOutput(test["binary"] , file)
+                speed = speed + parseOutput(test["binary"],c, file)
 
         result = result + "\"{}\",\"{}\",{},{},\"{}\",\"{}\"\n".format(info["vendor"],info["fwsize"],test["name"],test["binary"],speed,c)
     except:
