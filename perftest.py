@@ -98,7 +98,7 @@ with open('/opt/script/info') as f:
 while True:
     time.sleep(1)
     if( ping()):
-        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks. (FW_SIZE: {}, FW_VENDOR: {})".format(info["vendor"],info["fwsize"])])
+        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks. (FW_SIZE: {}, FW_VENDOR: {}, IPERF_SIZE: {})".format(info["vendor"],info["fwsize"],info["vmsize"])])
         break
     time.sleep(1)
 
