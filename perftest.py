@@ -36,14 +36,14 @@ def parseOutput(binary, filename):
         # Get fields
         result = re.search(regex[binary],line)
 
-        # convert speed to Mbps/sec
+        # parse speed to Mbps/sec
         try:
             speed = float(result.group(2))
             print("\tParsed Speed: " + str(speed) + " " + result.group(3) + " from file " + filename)
-            if "Gbits" in result.group(3):
-                speed = speed * 1000
-            elif "Kbits" in result.group(3):
-                speed = speed / 1000
+            #if "Gbits" in result.group(3):
+            #    speed = speed * 1000
+            #elif "Kbits" in result.group(3):
+            #    speed = speed / 1000
         except AttributeError:
             print("\tERROR on parsing in file: " + filename + " on line: " + line)
             traceback.print_exc()
@@ -68,20 +68,27 @@ def craftCommand(binary, settings, index):
 
     # handle server IP
     if binary == "iperf3" or binary == "iperf":
-        command = command + " -c " + server_ip + " > " + base_filename + ".log"
+        # report only in Mbits
+        command = command + "-f m"
+        # add server IP
+        command = command + " -c " + server_ip
     
     # handle multithreading
     base_command = command
     try:
         if settings["threads"] > 1:
-            command = command + " -p " + str(base_ports[binary])
+            command = command + " -p " + str(base_ports[binary]) + " > " + base_filename + ".log"
             for i in range(1, settings["threads"]):
                 if binary == "iperf3":
                     port = base_ports[binary] + i
                     filename = base_filename + "-" + str(port)
                     command = command + " & " + base_command + " -p " + str(port) + " > " + filename + ".log"
+        else:
+            # Redirect Output
+            command = command + " > " + base_filename + ".log"
     except KeyError:
-        return command
+        # Redirect Output
+        command = command + " > " + base_filename + ".log"
 
     return command
 
