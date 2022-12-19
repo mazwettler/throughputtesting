@@ -69,7 +69,7 @@ def craftCommand(binary, settings, index):
     # handle server IP
     if binary == "iperf3" or binary == "iperf":
         # report only in Mbits
-        command = command + "-f m"
+        command = command + " -f m"
         # add server IP
         command = command + " -c " + server_ip
     
