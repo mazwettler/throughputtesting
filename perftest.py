@@ -88,7 +88,7 @@ def craftCommand(binary, settings, index):
         # get parallel stream count
         regex_streams = re.search(regex["streams"], settings["flags"])
         try:
-            streams = regex_streams.group(1)
+            streams = int(regex_streams.group(1))
         except AttributeError:
             streams = 1
 
