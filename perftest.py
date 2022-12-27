@@ -117,9 +117,9 @@ def craftCommand(test, index):
     command = command.replace(
         "$BANDWIDTH", str(bandwidth))
     test["command"] = command
-    test["threads"] = threads
-    test["streams_per_thread"] = streams
-    test["streams_total"] = threads*streams
+    test["threads"] = int(threads)
+    test["streams_per_thread"] = int(streams)
+    test["streams_total"] = int(streams)*int(threads)
     test["expected_speed"] = int(info["bandwidth"])/1000000
     return test
 
