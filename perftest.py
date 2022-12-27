@@ -120,7 +120,7 @@ def craftCommand(test, index):
     test["threads"] = threads
     test["streams_per_thread"] = streams
     test["streams_total"] = threads*streams
-    test["expected_speed"] = info["bandwidth"]/1000000
+    test["expected_speed"] = int(info["bandwidth"])/1000000
     return test
 
 
