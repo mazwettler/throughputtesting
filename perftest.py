@@ -21,7 +21,8 @@ base_ports = {
 regex = {
     "iperf": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
     "iperf -u": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
-    "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*"
+    "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
+    "streams": r"\-P\s(\d*)\s*"
 }
 
 
@@ -69,26 +70,36 @@ def ping():
 
 
 def craftCommand(binary, settings, index):
+
+    streams = 1
+    threads = 1
     # generate command
     command = binary + " " + settings["flags"]
 
     # generate Output file name
     base_filename = output_dir + str(index) + "_" + binary
 
-    # handle server IP
+    # handle binary specific settings
     if binary == "iperf3" or binary == "iperf":
         # report only in Mbits
         command = command + " -f m"
         # add server IP
         command = command + " -c " + server_ip
+        # get parallel stream count
+        regex_streams = re.search(regex["streams"], settings["flags"])
+        try:
+            streams = regex_streams.group(1)
+        except AttributeError:
+            streams = 1
 
-    # handle multithreading
+            # handle multithreading
     base_command = command
     try:
         if settings["threads"] > 1:
+            threads = settings["threads"]
             command = command + " -p " + \
                 str(base_ports[binary]) + " > " + base_filename + ".log"
-            for i in range(1, settings["threads"]):
+            for i in range(1, threads):
                 if binary == "iperf3":
                     port = base_ports[binary] + i
                     filename = base_filename + "-" + str(port)
@@ -101,6 +112,8 @@ def craftCommand(binary, settings, index):
         # Redirect Output
         command = command + " > " + base_filename + ".log"
 
+    command = command.replace(
+        "$BANDWIDTH", info["bandwidth"]/(streams*threads))
     return command
 
 
@@ -127,7 +140,6 @@ for i, test in enumerate(data):
     try:
         time.sleep(5)
         c = craftCommand(test["binary"], test["binary_settings"], i)
-        c = c.replace("$BANDWIDTH", info["bandwidth"])
         data[i]["command"] = c
         print("\n# Running test: " + c)
         data[i]["output"] = subprocess.check_output(
