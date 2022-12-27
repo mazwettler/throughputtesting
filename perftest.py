@@ -14,24 +14,25 @@ time_between_runs = 360
 server_ip = "10.0.1.10"
 output_dir = "/opt/output/"
 base_ports = {
- "iperf": 5001,
- "iperf3": 5201
- }
+    "iperf": 5001,
+    "iperf3": 5201
+}
 
 regex = {
- "iperf": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
- "iperf -u": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
- "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*"
+    "iperf": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
+    "iperf -u": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
+    "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*"
 }
+
 
 def parseOutput(binary, command, filename):
     r = ""
     speed = ""
     with open(output_dir + filename, 'r') as f:
-        line=""
+        line = ""
         if binary == "iperf3":
             line = f.readlines()[-3]
-        
+
         elif binary == "iperf":
             if " -u " in command:
                 line = f.readlines()[-2]
@@ -39,30 +40,33 @@ def parseOutput(binary, command, filename):
             else:
                 line = f.readlines()[-1]
         # Get fields
-        result = re.search(regex[binary],line)
+        result = re.search(regex[binary], line)
 
         # parse speed to Mbps/sec
         try:
             speed = float(result.group(2))
-            print("\tParsed Speed: " + str(speed) + " " + result.group(3) + " from file " + filename)
-            #if "Gbits" in result.group(3):
+            print("\tParsed Speed: " + str(speed) + " " +
+                  result.group(3) + " from file " + filename)
+            # if "Gbits" in result.group(3):
             #    speed = speed * 1000
-            #elif "Kbits" in result.group(3):
+            # elif "Kbits" in result.group(3):
             #    speed = speed / 1000
         except AttributeError:
-            print("\tERROR on parsing in file: " + filename + " on line: " + line)
+            print("\tERROR on parsing in file: " +
+                  filename + " on line: " + line)
             traceback.print_exc()
     return speed
 
+
 def ping():
     online = os.system("ping -w 10 -c 1 " + server_ip)
-    if(online == 0):
-         print("Availabe with ",online)
-         return True
+    if (online == 0):
+        print("Availabe with ", online)
+        return True
     else:
-         print("Offline with ",online)
-         return False
-    
+        print("Offline with ", online)
+        return False
+
 
 def craftCommand(binary, settings, index):
     # generate command
@@ -77,17 +81,19 @@ def craftCommand(binary, settings, index):
         command = command + " -f m"
         # add server IP
         command = command + " -c " + server_ip
-    
+
     # handle multithreading
     base_command = command
     try:
         if settings["threads"] > 1:
-            command = command + " -p " + str(base_ports[binary]) + " > " + base_filename + ".log"
+            command = command + " -p " + \
+                str(base_ports[binary]) + " > " + base_filename + ".log"
             for i in range(1, settings["threads"]):
                 if binary == "iperf3":
                     port = base_ports[binary] + i
                     filename = base_filename + "-" + str(port)
-                    command = command + " & " + base_command + " -p " + str(port) + " > " + filename + ".log"
+                    command = command + " & " + base_command + \
+                        " -p " + str(port) + " > " + filename + ".log"
         else:
             # Redirect Output
             command = command + " > " + base_filename + ".log"
@@ -97,43 +103,47 @@ def craftCommand(binary, settings, index):
 
     return command
 
+
 data = ""
 info = ""
 result = "fw_vendor,fw_size,test,binary,throughput,command\n"
 
 with open('/opt/script/tests.json') as f:
-   data = json.load(f)
+    data = json.load(f)
 
 with open('/opt/script/info') as f:
-   info = json.load(f)
+    info = json.load(f)
 
 while True:
     time.sleep(1)
-    if( ping()):
-        telegram_send.send(conf="/opt/script/conf",messages=["iPerf server is reachable, starting benchmarks. (FW_SIZE: {}, FW_VENDOR: {}, IPERF_SIZE: {})".format(info["vendor"],info["fwsize"],info["vmsize"])])
+    if (ping()):
+        telegram_send.send(conf="/opt/script/conf", messages=[
+                           "iPerf server is reachable, starting benchmarks. (FW_SIZE: {}, FW_VENDOR: {}, IPERF_SIZE: {})".format(info["fwsize"], info["vendor"], info["vmsize"])])
         break
     time.sleep(1)
 
 
-   
-for i,test in enumerate(data):
+for i, test in enumerate(data):
     try:
         time.sleep(5)
         c = craftCommand(test["binary"], test["binary_settings"], i)
-        c = c.replace("$BANDWIDHT". info["bandwidth"])
+        c = c.replace("$BANDWIDTH", info["bandwidth"])
         data[i]["command"] = c
         print("\n# Running test: " + c)
-        data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
+        data[i]["output"] = subprocess.check_output(
+            c, shell=True).decode("utf-8")
         time.sleep(2)
         files = os.listdir(output_dir)
         speed = 0.0
         for file in files:
             if file.startswith(str(i)+"_"):
-                speed = speed + parseOutput(test["binary"],c, file)
+                speed = speed + parseOutput(test["binary"], c, file)
 
-        result = result + "\"{}\",\"{}\",{},{},\"{}\",\"{}\"\n".format(info["vendor"],info["fwsize"],test["name"],test["binary"],speed,c)
+        result = result + "\"{}\",\"{}\",{},{},\"{}\",\"{}\"\n".format(
+            info["vendor"], info["fwsize"], test["name"], test["binary"], speed, c)
     except:
-        telegram_send.send(conf="/opt/script/conf",messages=["Test failed: \n ```\n" + json.dumps(test) +  "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"],parse_mode="markdown")
+        telegram_send.send(conf="/opt/script/conf", messages=["Test failed: \n ```\n" + json.dumps(
+            test) + "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"], parse_mode="markdown")
 
 f = open(output_dir + "result.csv", "a+")
 f.write(result)
@@ -156,11 +166,12 @@ th {
 """
 
 classes = 'table table-striped table-bordered table-hover table-sm'
-html= template % df.to_html(classes=classes)
+html = template % df.to_html(classes=classes)
 
-#html = df.to_html()
-hti = Html2Image(custom_flags=["--headless", "--no-sandbox"],output_path=output_dir,browser_executable="/usr/bin/google-chrome-stable")
+# html = df.to_html()
+hti = Html2Image(custom_flags=["--headless", "--no-sandbox"],
+                 output_path=output_dir, browser_executable="/usr/bin/google-chrome-stable")
 hti.screenshot(html_str=html, save_as='result.png')
 
 with open(output_dir + 'result.png', "rb") as f:
-    telegram_send.send(conf="/opt/script/conf",images=[f])
+    telegram_send.send(conf="/opt/script/conf", images=[f])
