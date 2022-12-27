@@ -112,7 +112,7 @@ def craftCommand(binary, settings, index):
         # Redirect Output
         command = command + " > " + base_filename + ".log"
 
-    bandwidth = int(info["bandwidth"])/(streams*threads)
+    bandwidth = int(info["bandwidth"])/(streams*int(threads))
     command = command.replace(
         "$BANDWIDTH", str(bandwidth))
     return command
