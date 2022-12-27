@@ -70,6 +70,7 @@ def craftCommand(test, index):
 
     streams = 1
     threads = 1
+    bandwidth = info["bandwidth"]
     binary = test["binary"]
     settings = test["binary_settings"]
     # generate command
@@ -114,7 +115,9 @@ def craftCommand(test, index):
         # Redirect Output
         command = command + " > " + base_filename + ".log"
 
-    bandwidth = int(info["bandwidth"])/(int(streams)*int(threads))
+    if binary == "iperf3":
+        # bandwidth limitter
+        bandwidth = int(info["bandwidth"])/(int(streams)*int(threads))
     command = command.replace(
         "$BANDWIDTH", str(bandwidth))
     test["command"] = command
