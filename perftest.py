@@ -89,8 +89,11 @@ def craftCommand(test, index):
             streams = regex_streams.group(1)
         except AttributeError:
             streams = 1
-
-            # handle multithreading
+        if "-u" in settings["flags"]:
+            test["protocol"] = "UDP"
+        else:
+            test["protocol"] = "TCP"
+    # handle multithreading
     base_command = command
     try:
         if settings["threads"] > 1:
@@ -123,7 +126,7 @@ def craftCommand(test, index):
 
 data = ""
 info = ""
-result = '"FW vendor","FW size","test","binary","expected throughput (Mbps)","throughput (Mbps)","threads","streams per thread","total streams","command"\n'
+result = '"FW vendor","FW size","protocol","binary","expected throughput (Mbps)","throughput (Mbps)","threads","streams per thread","total streams","test name","command"\n'
 
 with open('/opt/script/tests.json') as f:
     data = json.load(f)
@@ -155,8 +158,8 @@ for i, test in enumerate(data):
             if file.startswith(str(i)+"_"):
                 speed = speed + float(parseOutput(data[i]["binary"], c, file))
 
-        result = result + "\"{}\",\"{}\",\"{}\",\"{}\",{},{},{},{},{},\"{}\"\n".format(
-            info["vendor"], info["fwsize"], data[i]["name"], data[i]["binary"], data[i]["expected_speed"], speed, data[i]["threads"], data[i]["streams_per_thread"], data[i]["streams_total"], c)
+        result = result + "\"{}\",\"{}\",\"{}\",\"{}\",{},{},{},{},{},\"{}\",\"{}\"\n".format(
+            info["vendor"], info["fwsize"], data[i]["protocol"], data[i]["binary"], data[i]["expected_speed"], speed, data[i]["threads"], data[i]["streams_per_thread"], data[i]["streams_total"], data[i]["name"], c)
     except:
         telegram_send.send(conf="/opt/script/conf", messages=["Test failed: \n ```\n" + json.dumps(
             data[i]) + "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"], parse_mode="markdown")
