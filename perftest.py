@@ -65,10 +65,12 @@ def ping():
         return False
 
 
-def craftCommand(binary, settings, index):
+def craftCommand(test, index):
 
     streams = 1
     threads = 1
+    binary = test["binary"]
+    settings = test["binary_settings"]
     # generate command
     command = binary + " " + settings["flags"]
 
@@ -111,12 +113,17 @@ def craftCommand(binary, settings, index):
     bandwidth = int(info["bandwidth"])/(int(streams)*int(threads))
     command = command.replace(
         "$BANDWIDTH", str(bandwidth))
-    return command
+    test["command"] = command
+    test["threads"] = threads
+    test["streams_per_thread"] = streams
+    test["streams_total"] = threads*streams
+    test["expected_speed"] = info["bandwidth"]/1000000
+    return test
 
 
 data = ""
 info = ""
-result = "fw_vendor,fw_size,test,binary,throughput,command\n"
+result = '"FW vendor","FW size","test","binary","expected throughput (Mbps)","throughput (Mbps)","threads","streams per thread","total streams","command"\n'
 
 with open('/opt/script/tests.json') as f:
     data = json.load(f)
@@ -136,8 +143,8 @@ while True:
 for i, test in enumerate(data):
     try:
         time.sleep(5)
-        c = craftCommand(test["binary"], test["binary_settings"], i)
-        data[i]["command"] = c
+        data[i] = craftCommand(test, i)
+        c = data[i]["command"]
         print("\n# Running test: " + c)
         data[i]["output"] = subprocess.check_output(
             c, shell=True).decode("utf-8")
@@ -146,13 +153,13 @@ for i, test in enumerate(data):
         speed = 0.0
         for file in files:
             if file.startswith(str(i)+"_"):
-                speed = speed + float(parseOutput(test["binary"], c, file))
+                speed = speed + float(parseOutput(data[i]["binary"], c, file))
 
-        result = result + "\"{}\",\"{}\",{},{},\"{}\",\"{}\"\n".format(
-            info["vendor"], info["fwsize"], test["name"], test["binary"], speed, c)
+        result = result + "\"{}\",\"{}\",\"{}\",\"{}\",{},{},{},{},{},\"{}\"\n".format(
+            info["vendor"], info["fwsize"], data[i]["name"], data[i]["binary"], data[i]["expected_speed"], speed, data[i]["threads"], data[i]["streams_per_thread"], data[i]["streams_total"], c)
     except:
         telegram_send.send(conf="/opt/script/conf", messages=["Test failed: \n ```\n" + json.dumps(
-            test) + "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"], parse_mode="markdown")
+            data[i]) + "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"], parse_mode="markdown")
 
 f = open(output_dir + "result.csv", "a+")
 f.write(result)
