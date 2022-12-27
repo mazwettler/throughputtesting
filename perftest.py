@@ -48,10 +48,6 @@ def parseOutput(binary, command, filename):
             speed = float(result.group(2))
             print("\tParsed Speed: " + str(speed) + " " +
                   result.group(3) + " from file " + filename)
-            # if "Gbits" in result.group(3):
-            #    speed = speed * 1000
-            # elif "Kbits" in result.group(3):
-            #    speed = speed / 1000
         except AttributeError:
             print("\tERROR on parsing in file: " +
                   filename + " on line: " + line)
@@ -150,7 +146,7 @@ for i, test in enumerate(data):
         speed = 0.0
         for file in files:
             if file.startswith(str(i)+"_"):
-                speed = speed + parseOutput(test["binary"], c, file)
+                speed = speed + float(parseOutput(test["binary"], c, file))
 
         result = result + "\"{}\",\"{}\",{},{},\"{}\",\"{}\"\n".format(
             info["vendor"], info["fwsize"], test["name"], test["binary"], speed, c)
@@ -185,6 +181,9 @@ html = template % df.to_html(classes=classes)
 hti = Html2Image(custom_flags=["--headless", "--no-sandbox"],
                  output_path=output_dir, browser_executable="/usr/bin/google-chrome-stable")
 hti.screenshot(html_str=html, save_as='result.png')
+
+with open(output_dir + 'result.html', "w+") as f:
+    f.write(html)
 
 with open(output_dir + 'result.png', "rb") as f:
     telegram_send.send(conf="/opt/script/conf", images=[f])
