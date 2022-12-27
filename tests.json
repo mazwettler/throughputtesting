@@ -34,7 +34,7 @@
     {
         "binary": "iperf3",
         "binary_settings": {
-            "flags": "-u -b 30G -t 10",
+            "flags": "-u -b $BANDWIDTH -t 10",
             "threads": 1
         },
         "name": "UDP Single Thread (Single Stream)"
@@ -42,7 +42,7 @@
     {
         "binary": "iperf3",
         "binary_settings": {
-            "flags": "-u -b 30G -t 10 -P 5",
+            "flags": "-u -b $BANDWIDTH -t 10 -P 5",
             "threads": 1
         },
         "name": "UDP Single Thread (Multi Stream)"
@@ -50,7 +50,7 @@
     {
         "binary": "iperf3",
         "binary_settings": {
-            "flags": "-u -b 30G -t 10 -P 1",
+            "flags": "-u -b $BANDWIDTH -t 10 -P 1",
             "threads": 5
         },
         "name": "UDP 5 Thread (Single Stream)"
@@ -58,7 +58,7 @@
     {
         "binary": "iperf3",
         "binary_settings": {
-            "flags": "-u -b 30G -t 10 -P 1",
+            "flags": "-u -b $BANDWIDTH -t 10 -P 1",
             "threads": 8
         },
         "name": "UDP 8 Thread (Single Stream)"
@@ -66,7 +66,7 @@
     {
         "binary": "iperf3",
         "binary_settings": {
-            "flags": "-u -b 30G -t 10 -P 5",
+            "flags": "-u -b $BANDWIDTH -t 10 -P 5",
             "threads": 5
         },
         "name": "UDP 5 Thread (Multi Stream)"
@@ -88,14 +88,14 @@
     {
         "binary": "iperf",
         "binary_settings": {
-            "flags": "-u -b 25G -t 10"
+            "flags": "-u -b $BANDWIDTH -t 10"
         },
         "name": "UDP Single Thread"
     },
     {
         "binary": "iperf",
         "binary_settings": {
-            "flags": "-u -b 25G -t 10 -P 5"
+            "flags": "-u -b $BANDWIDTH -t 10 -P 5"
         },
         "name": "UDP Multi Thread"
     }

@@ -120,6 +120,7 @@ for i,test in enumerate(data):
     try:
         time.sleep(5)
         c = craftCommand(test["binary"], test["binary_settings"], i)
+        c = c.replace("$BANDWIDHT". info["bandwidth"])
         data[i]["command"] = c
         print("\n# Running test: " + c)
         data[i]["output"] = subprocess.check_output(c, shell=True).decode("utf-8")
