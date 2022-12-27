@@ -36,7 +36,8 @@ def parseOutput(binary, command, filename):
 
         elif binary == "iperf":
             if " -u " in command:
-                line = f.readlines()[-2]
+                for l in (f.readlines()[-2:]):
+                    line = line + l
                 binary = "iperf -u"
             else:
                 line = f.readlines()[-1]
