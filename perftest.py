@@ -19,9 +19,9 @@ base_ports = {
 }
 
 regex = {
-    "iperf": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
-    "iperf -u": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
-    "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits/sec|Mbits/sec|Kbits/sec).*",
+    "iperf": r"\[(...)\].+?\s([0-9.]+)\s(Gbits\/sec|Mbits\/sec|Kbits\/sec).*",
+    "iperf -u": r"\[(...)\].+?\s([0-9.]+)\s(Gbits\/sec|Mbits\/sec|Kbits\/sec).*",
+    "iperf3": r"\[(...)\].+?\s([0-9.]+)\s(Gbits\/sec|Mbits\/sec|Kbits\/sec).*",
     "streams": r"\-P\s(\d*)\s*"
 }
 
