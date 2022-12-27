@@ -88,7 +88,7 @@ def craftCommand(binary, settings, index):
         # get parallel stream count
         regex_streams = re.search(regex["streams"], settings["flags"])
         try:
-            streams = int(regex_streams.group(1))
+            streams = regex_streams.group(1)
         except AttributeError:
             streams = 1
 
@@ -112,7 +112,7 @@ def craftCommand(binary, settings, index):
         # Redirect Output
         command = command + " > " + base_filename + ".log"
 
-    bandwidth = int(info["bandwidth"])/(streams*int(threads))
+    bandwidth = int(info["bandwidth"])/(int(streams)*int(threads))
     command = command.replace(
         "$BANDWIDTH", str(bandwidth))
     return command
