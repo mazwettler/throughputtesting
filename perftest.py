@@ -180,7 +180,7 @@ html = template % df.to_html(classes=classes)
 # html = df.to_html()
 hti = Html2Image(custom_flags=["--headless", "--no-sandbox"],
                  output_path=output_dir, browser_executable="/usr/bin/google-chrome-stable")
-hti.screenshot(html_str=html, save_as='result.png')
+hti.screenshot(html_str=html, save_as='result.png', size=(2560, 1440))
 
 with open(output_dir + 'result.html', "w+") as f:
     f.write(html)
