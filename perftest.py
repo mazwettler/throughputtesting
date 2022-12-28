@@ -130,7 +130,7 @@ def craftCommand(test, index):
 
 data = ""
 info = ""
-result = '"FW vendor","FW size","protocol","binary","expected throughput (Mbps)","throughput (Mbps)","threads","streams per thread","total streams","test name","command"\n'
+result = '"FW vendor","FW size","Protocol","Binary","Expected throughput (Mbps)","Throughput (Mbps)","Threads","Streams per thread","Total streams","Test name","Command"\n'
 
 with open('/opt/script/tests.json') as f:
     data = json.load(f)
