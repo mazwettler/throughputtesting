@@ -161,21 +161,25 @@ for i, test in enumerate(data):
         for file in files:
             if file.startswith(str(i)+"_"):
                 speed = speed + float(parseOutput(data[i]["binary"], c, file))
-        shortname = "{}_{}T_{}S".format(
-            data[i]["protocol"], data[i]["threads"], data[i]["streams_per_thread"])
-        result = result + "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",{},{},{},{},{},\"{}\",\"{}\",{},\"{}\"\n".format(
+        if binary == "iperf3":
+            shortname = "{}_{}T_{}S".format(
+                data[i]["protocol"], data[i]["threads"], data[i]["streams_per_thread"])
+        elif binary == "iperf":
+            shortname = "{}_{}T_1S".format(
+                data[i]["protocol"], data[i]["streams_per_thread"],
+        result=result + "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",{},{},{},{},{},\"{}\",\"{}\",{},\"{}\"\n".format(
             info["cloud"], info["vmsize"], info["vendor"], info["fwsize"], data[i]["protocol"], data[i]["binary"], data[i]["expected_speed"], speed, data[i]["threads"], data[i]["streams_per_thread"], data[i]["streams_total"], shortname, data[i]["name"], info["runtime"], c)
     except:
         telegram_send.send(conf="/opt/script/conf", messages=["Test failed: \n ```\n" + json.dumps(
             data[i]) + "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"], parse_mode="markdown")
 
-f = open(output_dir + "result.csv", "a+")
+f=open(output_dir + "result.csv", "a+")
 f.write(result)
 f.close()
 
-df = pd.read_csv(output_dir + "result.csv")
+df=pd.read_csv(output_dir + "result.csv")
 
-template = """"
+template=""""
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <style>
 th {
@@ -189,11 +193,11 @@ th {
 </body>
 """
 
-classes = 'table table-striped table-bordered table-hover table-sm'
-html = template % df.to_html(classes=classes)
+classes='table table-striped table-bordered table-hover table-sm'
+html=template % df.to_html(classes=classes)
 
 # html = df.to_html()
-hti = Html2Image(custom_flags=["--headless", "--no-sandbox"],
+hti=Html2Image(custom_flags=["--headless", "--no-sandbox"],
                  output_path=output_dir, browser_executable="/usr/bin/google-chrome-stable")
 hti.screenshot(html_str=html, save_as='result.png', size=(2560, 1440))
 
