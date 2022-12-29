@@ -130,7 +130,7 @@ def craftCommand(test, index):
 
 data = ""
 info = ""
-result = '"cloud","iperf_vm_size","fw_vendor","fw_size","protocol","binary","excpected_throughput","throughput","threads","streams_per_thread","total_streams","test_name","init_time","command"\n'
+result = '"cloud","iperf_vm_size","fw_vendor","fw_size","protocol","binary","excpected_throughput","throughput","threads","streams_per_thread","total_streams","short_name","test_name","init_time","command"\n'
 
 with open('/opt/script/tests.json') as f:
     data = json.load(f)
