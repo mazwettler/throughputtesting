@@ -161,10 +161,10 @@ for i, test in enumerate(data):
         for file in files:
             if file.startswith(str(i)+"_"):
                 speed = speed + float(parseOutput(data[i]["binary"], c, file))
-        if binary == "iperf3":
+        if data[i]["binary"] == "iperf3":
             shortname = "{}_{}T_{}S".format(
                 data[i]["protocol"], data[i]["threads"], data[i]["streams_per_thread"])
-        elif binary == "iperf":
+        elif data[i]["binary"] == "iperf":
             shortname = "{}_{}T_1S".format(
                 data[i]["protocol"], data[i]["streams_per_thread"])
         result = result + "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",{},{},{},{},{},\"{}\",\"{}\",{},\"{}\"\n".format(
