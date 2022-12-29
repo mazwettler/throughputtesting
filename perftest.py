@@ -7,10 +7,8 @@ import re
 import traceback
 import pandas as pd
 from html2image import Html2Image
-from datetime import datetime
 
 # Settings
-init_time = datetime.now()
 runs = 5
 time_between_runs = 360
 server_ip = "10.0.1.10"
@@ -166,7 +164,7 @@ for i, test in enumerate(data):
         shortname = "{}_{}T_{}S".format(
             data[i]["protocol"], data[i]["threads"], data[i]["streams_per_thread"])
         result = result + "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",{},{},{},{},{},\"{}\",\"{}\",{},\"{}\"\n".format(
-            info["cloud"], info["vmsize"], info["vendor"], info["fwsize"], data[i]["protocol"], data[i]["binary"], data[i]["expected_speed"], speed, data[i]["threads"], data[i]["streams_per_thread"], data[i]["streams_total"], shortname, data[i]["name"], init_time, c)
+            info["cloud"], info["vmsize"], info["vendor"], info["fwsize"], data[i]["protocol"], data[i]["binary"], data[i]["expected_speed"], speed, data[i]["threads"], data[i]["streams_per_thread"], data[i]["streams_total"], shortname, data[i]["name"], info["runtime"], c)
     except:
         telegram_send.send(conf="/opt/script/conf", messages=["Test failed: \n ```\n" + json.dumps(
             data[i]) + "``` \n\n Details: \n ```\n" + traceback.format_exc() + "```"], parse_mode="markdown")
