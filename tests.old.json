@@ -1,0 +1,156 @@
+[
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-b 0 -t 15 -O 5",
+            "threads": 1
+        },
+        "name": "TCP - single thread (single stream)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-b 0 -t 15 -O 5 -P 5",
+            "threads": 1
+        },
+        "name": "TCP - single thread (5 streams)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-b 0 -t 15 -O 5",
+            "threads": 5
+        },
+        "name": "TCP - 5 threads (single stream per thread)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-b 0 -t 15 -O 5 -P 5",
+            "threads": 5
+        },
+        "name": "TCP - 5 threads (5 streams per thread)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b $BANDWIDTH -t 10",
+            "threads": 1
+        },
+        "name": "UDP - single thread (single stream)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b $BANDWIDTH -t 10 -P 5",
+            "threads": 1
+        },
+        "name": "UDP - single thread (5 streams)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b $BANDWIDTH -t 10 -P 1",
+            "threads": 5
+        },
+        "name": "UDP - 5 threads (single stream per thread)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b $BANDWIDTH -t 10 -P 1",
+            "threads": 8
+        },
+        "name": "UDP - 8 threads (single stream per thread)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b $BANDWIDTH -t 10 -P 5",
+            "threads": 5
+        },
+        "name": "UDP - 5 threads (5 streams per thread)"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-t 10"
+        },
+        "name": "TCP - single thread"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-t 10 -P 5"
+        },
+        "name": "TCP - 5 threads"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-u -b $BANDWIDTH -t 10"
+        },
+        "name": "UDP - single thread"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-u -b $BANDWIDTH -t 10 -P 5"
+        },
+        "name": "UDP - 5 threads"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 10",
+            "threads": 1
+        },
+        "name": "unlimited UDP - single thread (single stream)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 10 -P 5",
+            "threads": 1
+        },
+        "name": "unlimited UDP - single thread (5 streams)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 10 -P 1",
+            "threads": 5
+        },
+        "name": "unlimited UDP - 5 threads (single stream per thread)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 10 -P 1",
+            "threads": 8
+        },
+        "name": "unlimited UDP - 8 threads (single stream per thread)"
+    },
+    {
+        "binary": "iperf3",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 10 -P 5",
+            "threads": 5
+        },
+        "name": "unlimited UDP - 5 threads (5 streams per thread)"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 10"
+        },
+        "name": "unlimited UDP - single thread"
+    },
+    {
+        "binary": "iperf",
+        "binary_settings": {
+            "flags": "-u -b 0 -t 10 -P 5"
+        },
+        "name": "unlimited UDP - 5 threads"
+    }
+]
