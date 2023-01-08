@@ -155,7 +155,7 @@ for i, test in enumerate(data):
         print("\n# Running test: " + c)
         data[i]["output"] = subprocess.check_output(
             c, shell=True).decode("utf-8")
-        time.sleep(2)
+        time.sleep(5)
         files = os.listdir(output_dir)
         speed = 0.0
         for file in files:
