@@ -15,7 +15,7 @@ state = 0
 
 
 def ping():
-    online = os.system("ping -c 1 -i 1 " + server_ip)
+    online = os.system("ping -c 1 -i 1 " + server_ip + "> /dev/null 2>&1")
     if (online == 0):
         print("Availabe with ", online)
         return True
